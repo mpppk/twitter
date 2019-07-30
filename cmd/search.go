@@ -29,18 +29,6 @@ func newTagFlag() *option.StringFlag {
 	}
 }
 
-func newDBPathFlag() *option.StringFlag {
-	return &option.StringFlag{
-		Flag: &option.Flag{
-			IsRequired: true,
-			IsFileName: true,
-			Name:       "dbPath",
-			Usage:      "DB file path",
-		},
-		Value: option.DefaultStringValue,
-	}
-}
-
 func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 	cmd = &cobra.Command{
 		Use:   "search",
@@ -54,7 +42,6 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 
 			db, err := bolt.Open(conf.DBPath, 0666, nil)
 			if err != nil {
-				cmd.Println(conf)
 				return xerrors.Errorf("failed to open db file from %s: %w", conf.DBPath, err)
 			}
 			defer func() {
@@ -120,9 +107,6 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 		},
 	}
 	if err := option.RegisterStringFlag(cmd, newTagFlag()); err != nil {
-		return nil, err
-	}
-	if err := option.RegisterStringFlag(cmd, newDBPathFlag()); err != nil {
 		return nil, err
 	}
 	return cmd, err

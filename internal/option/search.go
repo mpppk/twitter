@@ -17,5 +17,7 @@ func NewSearchCmdConfigFromViper() (*SearchCmdConfig, error) {
 }
 
 func newSearchCmdConfigFromRawConfig(rawConfig *CmdRawConfig) *SearchCmdConfig {
-	return &(rawConfig.SearchCmdConfig)
+	searchCmdConfig := &(rawConfig.SearchCmdConfig)
+	searchCmdConfig.DBPath = rawConfig.DBPath
+	return searchCmdConfig
 }

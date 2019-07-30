@@ -28,7 +28,18 @@ func NewRootCmd(fs afero.Fs) (*cobra.Command, error) {
 		},
 	}
 
+	dbPathFlag := &option.StringFlag{
+		Flag: &option.Flag{
+			Name:         "dbPath",
+			IsPersistent: true,
+			Usage:        "DB file path",
+		},
+	}
+
 	if err := option.RegisterStringFlag(cmd, configFlag); err != nil {
+		return nil, err
+	}
+	if err := option.RegisterStringFlag(cmd, dbPathFlag); err != nil {
 		return nil, err
 	}
 
