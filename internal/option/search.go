@@ -3,6 +3,7 @@ package option
 // SearchCmdConfig is config for sum command
 type SearchCmdConfig struct {
 	Tag               string
+	DBPath            string
 	ConsumerKey       string
 	ConsumerSecret    string
 	AccessToken       string

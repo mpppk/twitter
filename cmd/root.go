@@ -41,6 +41,7 @@ func NewRootCmd(fs afero.Fs) (*cobra.Command, error) {
 		subCmds = append(subCmds, subCmd)
 	}
 	cmd.AddCommand(subCmds...)
+	cmd.SetOut(os.Stdout)
 
 	return cmd, nil
 }
@@ -84,6 +85,6 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
 }

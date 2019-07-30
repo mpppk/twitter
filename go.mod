@@ -11,6 +11,7 @@ require (
 	github.com/dustin/gojson v0.0.0-20160307161227-2e71ec9dd5ad // indirect
 	github.com/garyburd/go-oauth v0.0.0-20180319155456-bca2e7f09a17 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/mpppk/bbolt v1.3.3
 	github.com/rhysd/go-github-selfupdate v1.1.0
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cobra v0.0.5
