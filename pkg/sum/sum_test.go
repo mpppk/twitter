@@ -2,12 +2,13 @@ package sum_test
 
 import (
 	"fmt"
-	"github.com/mpppk/cli-template/pkg/sum"
-	"github.com/mpppk/cli-template/pkg/util"
 	"io/ioutil"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/mpppk/twitter/pkg/sum"
+	"github.com/mpppk/twitter/pkg/util"
 )
 
 func ExampleSum() {

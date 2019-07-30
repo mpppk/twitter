@@ -3,9 +3,9 @@ package cmd
 import (
 	"strconv"
 
-	"github.com/mpppk/cli-template/internal/option"
-	"github.com/mpppk/cli-template/pkg/sum"
-	"github.com/mpppk/cli-template/pkg/util"
+	"github.com/mpppk/twitter/internal/option"
+	"github.com/mpppk/twitter/pkg/sum"
+	"github.com/mpppk/twitter/pkg/util"
 	"github.com/spf13/afero"
 
 	"golang.org/x/xerrors"
@@ -39,7 +39,7 @@ func newSumCmd(fs afero.Fs) (*cobra.Command, error) {
 		Short:   "Print sum of arguments",
 		Long:    ``,
 		Args:    cobra.MinimumNArgs(2),
-		Example: "cli-template sum -- -1 2  ->  1",
+		Example: "twitter sum -- -1 2  ->  1",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			for _, arg := range args {
 				if _, err := strconv.Atoi(arg); err != nil {

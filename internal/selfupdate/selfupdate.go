@@ -8,7 +8,7 @@ import (
 )
 
 const Version = "1.2.3"
-const slug = "mpppk/cli-template"
+const slug = "mpppk/twitter"
 
 // Do execute updating binary
 func Do() (bool, error) {

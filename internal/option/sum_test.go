@@ -3,7 +3,7 @@ package option_test
 import (
 	"testing"
 
-	"github.com/mpppk/cli-template/internal/option"
+	"github.com/mpppk/twitter/internal/option"
 )
 
 func TestSumCmdConfig_HasOut(t *testing.T) {

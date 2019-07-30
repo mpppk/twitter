@@ -3,11 +3,12 @@ package cmd_test
 import (
 	"bytes"
 	"fmt"
-	"github.com/spf13/afero"
 	"strings"
 	"testing"
 
-	"github.com/mpppk/cli-template/cmd"
+	"github.com/spf13/afero"
+
+	"github.com/mpppk/twitter/cmd"
 )
 
 func TestSum(t *testing.T) {
@@ -69,5 +70,3 @@ func TestSumWithOutFile(t *testing.T) {
 		}
 	}
 }
-
-

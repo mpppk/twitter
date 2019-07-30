@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mpppk/cli-template/internal/option"
+	"github.com/mpppk/twitter/internal/option"
 	"github.com/spf13/afero"
 
 	"github.com/mitchellh/go-homedir"
@@ -14,27 +14,17 @@ import (
 
 var cfgFile string
 
-func newToggleFlag() *option.BoolFlag {
-	return &option.BoolFlag{
-		Flag: &option.Flag{
-			Name:  "toggle",
-			Usage: "Do nothing",
-		},
-		Value: false,
-	}
-}
-
 func NewRootCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
-		Use:   "cli-template",
-		Short: "cli-template",
+		Use:   "twitter",
+		Short: "twitter",
 	}
 
 	configFlag := &option.StringFlag{
 		Flag: &option.Flag{
 			Name:         "config",
 			IsPersistent: true,
-			Usage:        "config file (default is $HOME/.cli-template.yaml)",
+			Usage:        "config file (default is $HOME/.twitter.yaml)",
 		},
 	}
 
@@ -85,9 +75,9 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".cli-template" (without extension).
+		// Search config in home directory with name ".twitter" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".cli-template")
+		viper.SetConfigName(".twitter")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

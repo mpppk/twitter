@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/mpppk/cli-template/internal/selfupdate"
+	"github.com/mpppk/twitter/internal/selfupdate"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
