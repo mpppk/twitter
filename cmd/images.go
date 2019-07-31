@@ -97,34 +97,57 @@ func downloadImageFromDB(cmd *cobra.Command, db *bolt.DB, downloadDir string) er
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			var tweet anaconda.Tweet
 			if err := json.Unmarshal(v, &tweet); err != nil {
-				return xerrors.Errorf("failed to unmarshal tweet json: %w", err)
+				cmd.Println(xerrors.Errorf("failed to unmarshal tweet json: %w", err))
+				continue
 			}
+
 			for i, entityMedia := range tweet.Entities.Media {
-				mediaRawUrl := entityMedia.Media_url_https
-				mediaUrl, err := url.Parse(mediaRawUrl)
+				downloadPath, err := downloadEntityMedia(&tweet, &entityMedia, i, downloadDir)
 				if err != nil {
-					return xerrors.Errorf("failed to parse media url(%s): %w", mediaRawUrl, err)
-				}
-				mediaUrlPaths := strings.Split(mediaUrl.Path, "/")
-				if len(mediaUrlPaths) == 0 {
-					return xerrors.Errorf("invalid mediaUrl: %s", mediaRawUrl)
-				}
-				mediaFileName := mediaUrlPaths[len(mediaUrlPaths)-1]
-				fileName := fmt.Sprintf("%d-%d-%s", tweet.Id, i, mediaFileName)
-				if isExist(fileName) {
+					cmd.Println(xerrors.Errorf("failed to download entity media from %s: %w", entityMedia.Media_url_https, err))
 					continue
 				}
-				downloadPath := path.Join(downloadDir, fileName)
-				if err := downloadFile(mediaRawUrl, downloadPath); err != nil {
-					return xerrors.Errorf("failed to download file to %s", downloadPath)
+				if downloadPath != "" {
+					cmd.Printf("media is downloaded to %s\n", downloadPath)
+					time.Sleep(10 * time.Second)
 				}
-				cmd.Printf("media is downloaded to %s\n", downloadPath)
-				time.Sleep(10 * time.Second)
-
+			}
+			for i, entityMedia := range tweet.ExtendedEntities.Media {
+				downloadPath, err := downloadEntityMedia(&tweet, &entityMedia, i, downloadDir)
+				if err != nil {
+					cmd.Println(xerrors.Errorf("failed to download extended entity media from %s: %w", entityMedia.Media_url_https, err))
+					continue
+				}
+				if downloadPath != "" {
+					cmd.Printf("extended media is downloaded to %s\n", downloadPath)
+					time.Sleep(10 * time.Second)
+				}
 			}
 		}
 		return nil
 	})
+}
+
+func downloadEntityMedia(tweet *anaconda.Tweet, entityMedia *anaconda.EntityMedia, index int, downloadDir string) (string, error) {
+	mediaRawUrl := entityMedia.Media_url_https
+	mediaUrl, err := url.Parse(mediaRawUrl)
+	if err != nil {
+		return "", xerrors.Errorf("failed to parse media url(%s): %w", mediaRawUrl, err)
+	}
+	mediaUrlPaths := strings.Split(mediaUrl.Path, "/")
+	if len(mediaUrlPaths) == 0 {
+		return "", xerrors.Errorf("invalid mediaUrl: %s", mediaRawUrl)
+	}
+	mediaFileName := mediaUrlPaths[len(mediaUrlPaths)-1]
+	fileName := fmt.Sprintf("%d-%d-%s", tweet.Id, index, mediaFileName)
+	downloadPath := path.Join(downloadDir, fileName)
+	if isExist(downloadPath) {
+		return "", nil
+	}
+	if err := downloadFile(mediaRawUrl, downloadPath); err != nil {
+		return "", xerrors.Errorf("failed to download file to %s", downloadPath)
+	}
+	return downloadPath, nil
 }
 
 func downloadFile(fileUrl, downloadPath string) (err error) {
