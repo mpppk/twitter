@@ -13,17 +13,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func newDirFlag() *option.StringFlag {
-	return &option.StringFlag{
-		Flag: &option.Flag{
-			IsDirName: true,
-			Name:      "dir",
-			Usage:     "downloaded images destination directory path",
-		},
-		Value: "images",
-	}
-}
-
 func ImagesCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "images",
@@ -56,7 +45,26 @@ func ImagesCmd(fs afero.Fs) (*cobra.Command, error) {
 			return err
 		},
 	}
-	if err := option.RegisterStringFlag(cmd, newDirFlag()); err != nil {
+	dirFlag := &option.StringFlag{
+		Flag: &option.Flag{
+			IsDirName: true,
+			Name:      "dir",
+			Usage:     "downloaded images destination directory path",
+		},
+		Value: "images",
+	}
+	if err := option.RegisterStringFlag(cmd, dirFlag); err != nil {
+		return nil, err
+	}
+
+	intervalFlag := &option.IntFlag{
+		Flag: &option.Flag{
+			Name:  "interval",
+			Usage: "interval between download images",
+		},
+		Value: 10,
+	}
+	if err := option.RegisterIntFlag(cmd, intervalFlag); err != nil {
 		return nil, err
 	}
 	return cmd, nil
