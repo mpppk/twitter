@@ -13,6 +13,7 @@ type SearchCmdConfig struct {
 type SearchRawCmdConfig struct {
 	Query             string
 	Exclude           string
+	Interval          int
 	Filter            string
 	DBPath            string
 	ConsumerKey       string

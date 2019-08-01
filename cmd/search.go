@@ -48,8 +48,8 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 				tweets, err := client.SearchTweets(query, maxId)
 				if err != nil {
 					cmd.Println("failed to search: %s", err)
-					cmd.Println("sleep 60 sec...")
-					time.Sleep(60 * time.Second)
+					cmd.Printf("sleep %d sec...\n", conf.Interval)
+					time.Sleep(time.Duration(conf.Interval) * time.Second)
 					continue
 				}
 
@@ -103,6 +103,17 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 		},
 	}
 	if err := option.RegisterStringFlag(cmd, filterFlag); err != nil {
+		return nil, err
+	}
+
+	intervalFlag := &option.IntFlag{
+		Flag: &option.Flag{
+			Name:  "interval",
+			Usage: "Interval sec between API request failure and rerun",
+		},
+		Value: 60,
+	}
+	if err := option.RegisterIntFlag(cmd, intervalFlag); err != nil {
 		return nil, err
 	}
 
