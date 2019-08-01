@@ -1,8 +1,19 @@
 package option
 
-// SearchCmdConfig is config for sum command
+import "strings"
+
+// SearchCmdConfig is config for search command
 type SearchCmdConfig struct {
-	Tag               string
+	*SearchRawCmdConfig
+	Excludes []string
+	Filters  []string
+}
+
+// SearchCmdConfig is raw config for search command
+type SearchRawCmdConfig struct {
+	Query             string
+	Exclude           string
+	Filter            string
 	DBPath            string
 	ConsumerKey       string
 	ConsumerSecret    string
@@ -10,14 +21,20 @@ type SearchCmdConfig struct {
 	AccessTokenSecret string
 }
 
-// NewSearchCmdConfigFromViper generate config for sum command from viper
+// NewSearchCmdConfigFromViper generate config for search command from viper
 func NewSearchCmdConfigFromViper() (*SearchCmdConfig, error) {
 	rawConfig, err := newCmdRawConfig()
 	return newSearchCmdConfigFromRawConfig(rawConfig), err
 }
 
 func newSearchCmdConfigFromRawConfig(rawConfig *CmdRawConfig) *SearchCmdConfig {
-	searchCmdConfig := &(rawConfig.SearchCmdConfig)
+	searchCmdConfig := &SearchCmdConfig{
+		SearchRawCmdConfig: &(rawConfig.SearchRawCmdConfig),
+	}
 	searchCmdConfig.DBPath = rawConfig.DBPath
+
+	searchCmdConfig.Excludes = strings.Split(searchCmdConfig.Exclude, ",")
+	searchCmdConfig.Filters = strings.Split(searchCmdConfig.Filter, ",")
+
 	return searchCmdConfig
 }

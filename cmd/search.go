@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"strings"
 	"time"
 
 	"github.com/mpppk/twitter/internal/twitter"
@@ -13,17 +12,6 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
 )
-
-func newTagFlag() *option.StringFlag {
-	return &option.StringFlag{
-		Flag: &option.Flag{
-			IsRequired: true,
-			Name:       "tag",
-			Usage:      "hash tag",
-		},
-		Value: option.DefaultStringValue,
-	}
-}
 
 func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 	cmd = &cobra.Command{
@@ -51,11 +39,11 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 			if err != nil {
 				maxId = -1
 			} else {
-				cmd.Println("retrieve max ID: ", maxId)
+				cmd.Println("retrieved max ID: ", maxId)
 			}
 
-			queries := []string{conf.Tag, "OR", "#" + conf.Tag, "exclude:retweets", "filter:images"}
-			query := strings.Join(queries, "")
+			query := twitter.BuildQuery(conf.Query, conf.Excludes, conf.Filters)
+			cmd.Printf("Search query: %q\n", query)
 			for {
 				tweets, err := client.SearchTweets(query, maxId)
 				if err != nil {
@@ -85,9 +73,39 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 			}
 		},
 	}
-	if err := option.RegisterStringFlag(cmd, newTagFlag()); err != nil {
+	queryFlag := &option.StringFlag{
+		Flag: &option.Flag{
+			IsRequired: true,
+			Name:       "query",
+			Usage:      "search query",
+		},
+	}
+	if err := option.RegisterStringFlag(cmd, queryFlag); err != nil {
 		return nil, err
 	}
+
+	excludeFlag := &option.StringFlag{
+		Flag: &option.Flag{
+			IsRequired: true,
+			Name:       "exclude",
+			Usage:      "exclude tweet type",
+		},
+	}
+	if err := option.RegisterStringFlag(cmd, excludeFlag); err != nil {
+		return nil, err
+	}
+
+	filterFlag := &option.StringFlag{
+		Flag: &option.Flag{
+			IsRequired: true,
+			Name:       "filter",
+			Usage:      "filter tweet type",
+		},
+	}
+	if err := option.RegisterStringFlag(cmd, filterFlag); err != nil {
+		return nil, err
+	}
+
 	return cmd, err
 }
 

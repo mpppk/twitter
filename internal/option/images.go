@@ -15,6 +15,6 @@ func NewImagesCmdConfigFromViper() (*ImagesCmdConfig, error) {
 func newImagesCmdConfigFromRawConfig(rawConfig *CmdRawConfig) *ImagesCmdConfig {
 	imagesCmdConfig := &(rawConfig.ImagesCmdConfig)
 	// FIXME
-	imagesCmdConfig.DBPath = rawConfig.SearchCmdConfig.DBPath
+	imagesCmdConfig.DBPath = rawConfig.DBPath
 	return imagesCmdConfig
 }

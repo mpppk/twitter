@@ -33,9 +33,9 @@ func newCmdConfigFromRawConfig(rawConfig *CmdRawConfig) *CmdConfig {
 }
 
 type CmdRawConfig struct {
-	SumCmdConfig    `mapstructure:",squash"`
-	SearchCmdConfig `mapstructure:",squash"`
-	ImagesCmdConfig `mapstructure:",squash"`
+	SumCmdConfig       `mapstructure:",squash"`
+	SearchRawCmdConfig `mapstructure:",squash"`
+	ImagesCmdConfig    `mapstructure:",squash"`
 
 	Toggle bool
 	DBPath string
