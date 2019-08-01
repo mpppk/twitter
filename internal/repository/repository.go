@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"encoding/binary"
 	"encoding/json"
 	"fmt"
 	"time"
@@ -27,6 +28,14 @@ func New(dbPath string, logger Logger) (*Repository, error) {
 	if err != nil {
 		return nil, xerrors.Errorf("failed to open db file from %s: %w", dbPath, err)
 	}
+
+	if err := createBucketIfNotExists(db, "tweets"); err != nil {
+		return nil, xerrors.Errorf("failed to create bucket which named %s: %w", "tweets", err)
+	}
+	if err := createBucketIfNotExists(db, "maxID"); err != nil {
+		return nil, xerrors.Errorf("failed to create bucket which named %s: %w", "maxID", err)
+	}
+
 	return &Repository{db: db, logger: logger}, nil
 }
 
@@ -77,5 +86,59 @@ func (r *Repository) DownloadImageFromDB(downloadDir string) error {
 			}
 		}
 		return nil
+	})
+}
+
+func (r *Repository) GetMaxID() (int64, error) {
+	var maxID int64
+	err := r.db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("maxID"))
+		maxIDBytes := b.Get([]byte("maxID"))
+		mid, bufSize := binary.Varint(maxIDBytes)
+		if mid == 0 && bufSize == 0 {
+			return fmt.Errorf("buf too small")
+		}
+		if mid == 0 && bufSize < 0 {
+			return fmt.Errorf("value larger than 64 bits (overflow)")
+		}
+		maxID = mid
+		return nil
+	})
+	if err != nil {
+		return 0, xerrors.Errorf("failed to retrieve tweet max id from db: %w", err)
+	}
+	return maxID, nil
+}
+
+func (r *Repository) SaveMaxId(maxId int64) (bool, error) {
+	currentMaxID, err := r.GetMaxID()
+	if err == nil && currentMaxID <= maxId {
+		return false, nil
+	}
+
+	idBytes := make([]byte, binary.MaxVarintLen64)
+	return true, r.db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("maxID"))
+		binary.PutVarint(idBytes, maxId)
+		return b.Put(
+			[]byte("maxID"),
+			idBytes,
+		)
+	})
+}
+
+func (r *Repository) SaveTweet(tweet *anaconda.Tweet) error {
+	idBytes := make([]byte, binary.MaxVarintLen64)
+	tweetJsonBytes, err := json.Marshal(tweet)
+	if err != nil {
+		return err
+	}
+	return r.db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("tweets"))
+		binary.PutVarint(idBytes, tweet.Id)
+		return b.Put(
+			idBytes,
+			tweetJsonBytes,
+		)
 	})
 }
