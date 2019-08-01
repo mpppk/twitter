@@ -24,6 +24,9 @@ type SearchRawCmdConfig struct {
 // NewSearchCmdConfigFromViper generate config for search command from viper
 func NewSearchCmdConfigFromViper() (*SearchCmdConfig, error) {
 	rawConfig, err := newCmdRawConfig()
+	if err != nil {
+		return nil, err
+	}
 	return newSearchCmdConfigFromRawConfig(rawConfig), err
 }
 
