@@ -120,3 +120,17 @@ func (r *Repository) SaveTweet(tweet *anaconda.Tweet) error {
 		)
 	})
 }
+
+// SendTweetStrToChannel send tweet strings in DB to provided channel
+func (r *Repository) SendTweetStrToChannel(ch chan string) error {
+	return r.db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("tweets"))
+
+		c := b.Cursor()
+
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			ch <- string(v)
+		}
+		return nil
+	})
+}
