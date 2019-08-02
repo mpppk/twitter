@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func ImagesCmd(fs afero.Fs) (*cobra.Command, error) {
+func newDownloadImagesCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "images",
 		Short: "Download images from DB file",
@@ -71,5 +71,5 @@ func ImagesCmd(fs afero.Fs) (*cobra.Command, error) {
 }
 
 func init() {
-	cmdGenerators = append(cmdGenerators, ImagesCmd)
+	downloadSubCmdGenerators = append(downloadSubCmdGenerators, newDownloadImagesCmd)
 }
