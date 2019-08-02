@@ -9,6 +9,15 @@ import (
 	bolt "github.com/mpppk/bbolt"
 )
 
+var MaxIDKey = "maxID"
+var MinIDKey = "minID"
+var tweetsBucketName = "tweets"
+var idBucketName = "maxID"
+
+func IsValidKey(key string) bool {
+	return key == MaxIDKey || key == MinIDKey
+}
+
 func createBucketIfNotExists(db *bolt.DB, bucketName string) error {
 	return db.Update(func(tx *bolt.Tx) error {
 		if _, err := tx.CreateBucketIfNotExists([]byte(bucketName)); err != nil {
@@ -18,14 +27,9 @@ func createBucketIfNotExists(db *bolt.DB, bucketName string) error {
 	})
 }
 
-func saveInt64(db *bolt.DB, bucketName, key string, value int64) (bool, error) {
-	currentMaxID, err := getInt64(db, bucketName, key)
-	if err == nil && currentMaxID <= value {
-		return false, nil
-	}
-
+func saveInt64(db *bolt.DB, bucketName, key string, value int64) error {
 	idBytes := make([]byte, binary.MaxVarintLen64)
-	return true, db.Update(func(tx *bolt.Tx) error {
+	return db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(bucketName))
 		binary.PutVarint(idBytes, value)
 		return b.Put(

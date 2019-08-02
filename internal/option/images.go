@@ -1,8 +1,13 @@
 package option
 
+// ImagesRawCmdConfig is raw config for sum command
+type ImagesRawCmdConfig struct {
+	Dir string
+}
+
 // ImagesCmdConfig is config for sum command
 type ImagesCmdConfig struct {
-	Dir    string
+	*ImagesRawCmdConfig
 	DBPath string
 }
 
@@ -13,8 +18,9 @@ func NewImagesCmdConfigFromViper() (*ImagesCmdConfig, error) {
 }
 
 func newImagesCmdConfigFromRawConfig(rawConfig *CmdRawConfig) *ImagesCmdConfig {
-	imagesCmdConfig := &(rawConfig.ImagesCmdConfig)
-	// FIXME
-	imagesCmdConfig.DBPath = rawConfig.DBPath
+	imagesCmdConfig := &ImagesCmdConfig{
+		ImagesRawCmdConfig: &(rawConfig.ImagesRawCmdConfig),
+		DBPath:             rawConfig.DBPath,
+	}
 	return imagesCmdConfig
 }

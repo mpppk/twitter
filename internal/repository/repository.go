@@ -29,8 +29,8 @@ func New(dbPath string, logger Logger) (*Repository, error) {
 		return nil, xerrors.Errorf("failed to open db file from %s: %w", dbPath, err)
 	}
 
-	if err := createBucketIfNotExists(db, "tweets"); err != nil {
-		return nil, xerrors.Errorf("failed to create bucket which named %s: %w", "tweets", err)
+	if err := createBucketIfNotExists(db, tweetsBucketName); err != nil {
+		return nil, xerrors.Errorf("failed to create bucket which named %s: %w", tweetsBucketName, err)
 	}
 	if err := createBucketIfNotExists(db, "maxID"); err != nil {
 		return nil, xerrors.Errorf("failed to create bucket which named %s: %w", "maxID", err)
@@ -49,9 +49,9 @@ func (r *Repository) Close() error {
 
 func (r *Repository) DownloadImageFromDB(downloadDir string) error {
 	return r.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("tweets"))
+		b := tx.Bucket([]byte(tweetsBucketName))
 		if b == nil {
-			return fmt.Errorf("failed to retrieve bucket which named %s", "tweets")
+			return fmt.Errorf("failed to retrieve bucket which named %s", tweetsBucketName)
 		}
 		c := b.Cursor()
 
@@ -90,19 +90,35 @@ func (r *Repository) DownloadImageFromDB(downloadDir string) error {
 }
 
 func (r *Repository) GetMaxID() (int64, error) {
-	return getInt64(r.db, "maxID", "maxID")
+	return getInt64(r.db, idBucketName, MaxIDKey)
 }
 
 func (r *Repository) GetMinID() (int64, error) {
-	return getInt64(r.db, "maxID", "minID")
+	return getInt64(r.db, idBucketName, MinIDKey)
+}
+
+func (r *Repository) SetMinId(minId int64) error {
+	return saveInt64(r.db, idBucketName, MinIDKey, minId)
 }
 
 func (r *Repository) SaveMinId(minId int64) (bool, error) {
-	return saveInt64(r.db, "maxID", "minID", minId)
+	currentMinID, err := getInt64(r.db, idBucketName, MinIDKey)
+	if err == nil && currentMinID >= minId {
+		return false, nil
+	}
+	return true, r.SetMinId(minId)
+}
+
+func (r *Repository) SetMaxId(maxId int64) error {
+	return saveInt64(r.db, idBucketName, MaxIDKey, maxId)
 }
 
 func (r *Repository) SaveMaxId(maxId int64) (bool, error) {
-	return saveInt64(r.db, "maxID", "maxID", maxId)
+	currentMaxID, err := getInt64(r.db, idBucketName, MaxIDKey)
+	if err == nil && currentMaxID <= maxId {
+		return false, nil
+	}
+	return true, r.SetMaxId(maxId)
 }
 
 func (r *Repository) SaveTweet(tweet *anaconda.Tweet) error {
@@ -112,7 +128,7 @@ func (r *Repository) SaveTweet(tweet *anaconda.Tweet) error {
 		return err
 	}
 	return r.db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("tweets"))
+		b := tx.Bucket([]byte(tweetsBucketName))
 		binary.PutVarint(idBytes, tweet.Id)
 		return b.Put(
 			idBytes,
@@ -124,7 +140,7 @@ func (r *Repository) SaveTweet(tweet *anaconda.Tweet) error {
 // SendTweetStrToChannel send tweet strings in DB to provided channel
 func (r *Repository) SendTweetStrToChannel(ch chan string) error {
 	return r.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("tweets"))
+		b := tx.Bucket([]byte(tweetsBucketName))
 
 		c := b.Cursor()
 

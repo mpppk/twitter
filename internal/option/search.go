@@ -1,12 +1,24 @@
 package option
 
-import "strings"
+import (
+	"strings"
+
+	"golang.org/x/xerrors"
+)
 
 // SearchCmdConfig is config for search command
 type SearchCmdConfig struct {
 	*SearchRawCmdConfig
 	Excludes []string
 	Filters  []string
+	DBPath   string
+}
+
+func (s *SearchCmdConfig) validate() error {
+	if s.DBPath == "" {
+		return xerrors.Errorf("--db-path must be provided")
+	}
+	return nil
 }
 
 // SearchCmdConfig is raw config for search command
@@ -15,7 +27,6 @@ type SearchRawCmdConfig struct {
 	Exclude           string
 	Interval          int
 	Filter            string
-	DBPath            string
 	ConsumerKey       string
 	ConsumerSecret    string
 	AccessToken       string
@@ -28,7 +39,8 @@ func NewSearchCmdConfigFromViper() (*SearchCmdConfig, error) {
 	if err != nil {
 		return nil, err
 	}
-	return newSearchCmdConfigFromRawConfig(rawConfig), err
+	searchCmdConfig := newSearchCmdConfigFromRawConfig(rawConfig)
+	return searchCmdConfig, searchCmdConfig.validate()
 }
 
 func newSearchCmdConfigFromRawConfig(rawConfig *CmdRawConfig) *SearchCmdConfig {

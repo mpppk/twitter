@@ -31,7 +31,7 @@ func NewRootCmd(fs afero.Fs) (*cobra.Command, error) {
 	dbPathFlag := &option.StringFlag{
 		Flag: &option.Flag{
 			Name:         "db-path",
-			ViperName:    "dbPath",
+			ViperName:    "DBPath",
 			IsPersistent: true,
 			Usage:        "DB file path",
 		},

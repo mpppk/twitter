@@ -67,7 +67,7 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 				}
 
 				lastTweet := tweets[len(tweets)-1]
-				if _, err := repo.SaveMaxId(lastTweet.Id - 1); err != nil {
+				if err := repo.SetMaxId(lastTweet.Id - 1); err != nil {
 					return err
 				}
 
@@ -97,7 +97,7 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 					}
 
 					firstTweet := tweets[0]
-					if _, err := repo.SaveMinId(firstTweet.Id); err != nil {
+					if err := repo.SetMinId(firstTweet.Id); err != nil {
 						return err
 					}
 
