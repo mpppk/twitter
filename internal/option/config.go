@@ -15,6 +15,7 @@ type Flag struct {
 	IsFileName   bool
 	Shorthand    string
 	Name         string
+	ViperName    string
 	Usage        string
 }
 
@@ -57,7 +58,11 @@ func RegisterStringFlag(cmd *cobra.Command, flagConfig *StringFlag) error {
 		return err
 	}
 
-	if err := viper.BindPFlag(flagConfig.Name, flagSet.Lookup(flagConfig.Name)); err != nil {
+	viperName := flagConfig.Name
+	if flagConfig.ViperName != "" {
+		viperName = flagConfig.ViperName
+	}
+	if err := viper.BindPFlag(viperName, flagSet.Lookup(flagConfig.Name)); err != nil {
 		return err
 	}
 	return nil
