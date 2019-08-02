@@ -5,6 +5,7 @@ import "strings"
 func BuildQuery(query string, excludes []string, filters []string) string {
 	queries := []string{
 		query,
+		"OR",
 		"#" + query,
 	}
 	for _, exclude := range excludes {

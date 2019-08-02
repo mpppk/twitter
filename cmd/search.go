@@ -24,6 +24,7 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 				return err
 			}
 
+			cmd.Println("db path", conf.DBPath)
 			repo, err := repository.New(conf.DBPath, cmd)
 			defer func() {
 				err = repo.Close()
@@ -37,6 +38,7 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 
 			maxId, err := repo.GetMaxID()
 			if err != nil {
+				cmd.Println("saved max ID does not found")
 				maxId = -1
 			} else {
 				cmd.Println("retrieved max ID: ", maxId)
@@ -44,8 +46,9 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 
 			query := twitter.BuildQuery(conf.Query, conf.Excludes, conf.Filters)
 			cmd.Printf("Search query: %q\n", query)
+
 			for {
-				tweets, err := client.SearchTweets(query, maxId)
+				tweets, err := client.SearchTweets(query, maxId, -1)
 				if err != nil {
 					cmd.Println("failed to search: %s", err)
 					cmd.Printf("sleep %d sec...\n", conf.Interval)
@@ -54,7 +57,7 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 				}
 
 				if len(tweets) == 0 {
-					return nil
+					break
 				}
 
 				for _, tweet := range tweets {
@@ -69,8 +72,40 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 				}
 
 				maxId = lastTweet.Id - 1
-				cmd.Printf("new max id: %s\n", maxId)
+				cmd.Printf("new max id: %d\n", maxId)
 			}
+
+			// 最新のtweet取得部分を実装
+			if minId, err := repo.GetMinID(); err == nil {
+				for {
+					tweets, err := client.SearchTweets(query, -1, minId)
+					if err != nil {
+						cmd.Println("failed to search: %s", err)
+						cmd.Printf("sleep %d sec...\n", conf.Interval)
+						time.Sleep(time.Duration(conf.Interval) * time.Second)
+						continue
+					}
+
+					if len(tweets) == 0 {
+						break
+					}
+
+					for _, tweet := range tweets {
+						if err := repo.SaveTweet(&tweet); err != nil {
+							return err
+						}
+					}
+
+					firstTweet := tweets[0]
+					if _, err := repo.SaveMinId(firstTweet.Id); err != nil {
+						return err
+					}
+
+					minId = firstTweet.Id
+					cmd.Printf("new min id: %d\n", minId)
+				}
+			}
+			return nil
 		},
 	}
 	queryFlag := &option.StringFlag{

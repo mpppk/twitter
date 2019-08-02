@@ -21,12 +21,16 @@ func NewClient(accessToken, accessTokenSecret, consumerKey, consumerSecret strin
 	}
 }
 
-func (c *Client) SearchTweets(query string, maxId int64) ([]anaconda.Tweet, error) {
+func (c *Client) SearchTweets(query string, maxId, sinceId int64) ([]anaconda.Tweet, error) {
 	v := url.Values{}
 	v.Set("count", "100")
-	lastTweetIdStr := fmt.Sprintf("%d", maxId-1)
 	if maxId > 0 {
+		lastTweetIdStr := fmt.Sprintf("%d", maxId-1)
 		v.Set("max_id", lastTweetIdStr)
+	}
+	if sinceId > 0 {
+		sinceIdStr := fmt.Sprintf("%d", sinceId)
+		v.Set("since_id", sinceIdStr)
 	}
 	searchResult, err := c.client.GetSearch(query, v)
 	if err != nil {
