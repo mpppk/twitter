@@ -20,10 +20,6 @@ func Test_newCmdConfigFromRawConfig(t *testing.T) {
 			name: "Toggle property should have false if CmdRawConfig has false",
 			args: args{
 				rawConfig: &option.CmdRawConfig{
-					SumCmdConfig: option.SumCmdConfig{
-						Norm: false,
-						Out:  "",
-					},
 					Toggle: false,
 				},
 			},
@@ -35,10 +31,6 @@ func Test_newCmdConfigFromRawConfig(t *testing.T) {
 			name: "Toggle property should have true if CmdRawConfig has true",
 			args: args{
 				rawConfig: &option.CmdRawConfig{
-					SumCmdConfig: option.SumCmdConfig{
-						Norm: false,
-						Out:  "",
-					},
 					Toggle: true,
 				},
 			},

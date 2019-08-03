@@ -52,7 +52,7 @@ If you want to download images which contained in tweets, execute 'download imag
 			for {
 				tweets, err := client.SearchTweets(query, maxId, -1)
 				if err != nil {
-					cmd.Println("failed to search: %s", err)
+					cmd.Println("failed to search:", err)
 					cmd.Printf("sleep %d sec...\n", conf.Interval)
 					time.Sleep(time.Duration(conf.Interval) * time.Second)
 					continue
@@ -82,7 +82,7 @@ If you want to download images which contained in tweets, execute 'download imag
 				for {
 					tweets, err := client.SearchTweets(query, -1, minId)
 					if err != nil {
-						cmd.Println("failed to search: %s", err)
+						cmd.Println("failed to search:", err)
 						cmd.Printf("sleep %d sec...\n", conf.Interval)
 						time.Sleep(time.Duration(conf.Interval) * time.Second)
 						continue
