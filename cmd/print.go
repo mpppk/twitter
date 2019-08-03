@@ -12,8 +12,7 @@ import (
 func newPrintCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "print",
-		Short: "Print tweets information in DB",
-		//Long: ``,
+		Short: "Print tweets in local file DB",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			conf, err := option.NewPrintCmdConfigFromViper()
 			if err != nil {

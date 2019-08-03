@@ -10,7 +10,7 @@ var downloadSubCmdGenerators []cmdGenerator
 func newDownloadCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "download",
-		Short: "Download twitter contents",
+		Short: "Download twitter contents from local file DB",
 		//Long: ``,
 	}
 

@@ -9,7 +9,7 @@ import (
 func newSelfUpdateCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "selfupdate",
-		Short: "Update twitter",
+		Short: "Update twitter CLI",
 		//Long: `Update twitter`,
 		Run: func(cmd *cobra.Command, args []string) {
 			updated, err := selfupdate.Do()

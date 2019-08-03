@@ -17,7 +17,9 @@ func newSearchCmd(fs afero.Fs) (cmd *cobra.Command, err error) {
 	cmd = &cobra.Command{
 		Use:   "search",
 		Short: "search",
-		Long:  ``,
+		Long: `Search tweets by query and some options.
+Results are stored in local file DB. (You can specify the DB path by --db-path flag.
+If you want to download images which contained in tweets, execute 'download images' command after search command.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			conf, err := option.NewSearchCmdConfigFromViper()
 			if err != nil {

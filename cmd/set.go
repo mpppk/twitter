@@ -14,7 +14,9 @@ import (
 func newSetCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "set",
-		Short: "Set config property",
+		Short: "Set specified config value",
+		Long: fmt.Sprintf(`Set specified config value.
+Available values are %s, %s.`, repository.MinIDKey, repository.MaxIDKey),
 		Args: func(cmd *cobra.Command, args []string) error {
 			if len(args) != 2 {
 				return xerrors.Errorf("accepts 2 args, received %d", len(args))

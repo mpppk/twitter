@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/mpppk/twitter/internal/option"
 	"github.com/mpppk/twitter/internal/repository"
 	"github.com/spf13/afero"
@@ -10,8 +12,10 @@ import (
 
 func newGetCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
-		Use:       "get",
-		Short:     "Print config property",
+		Use:   "get",
+		Short: "Print specified config value",
+		Long: fmt.Sprintf(`Print specified config value.
+Available values are %s, %s.`, repository.MinIDKey, repository.MaxIDKey),
 		Args:      cobra.ExactValidArgs(1),
 		ValidArgs: []string{repository.MaxIDKey, repository.MinIDKey},
 		//Long: ``,

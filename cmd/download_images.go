@@ -16,8 +16,9 @@ import (
 func newDownloadImagesCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "images",
-		Short: "Download images from DB file",
-		Long:  ``,
+		Short: "Download images which contained tweets from DB file",
+		Long: `Download images which contained tweets from DB file.
+You must execute 'search' command first for collect tweets to DB.`,
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			conf, err := option.NewImagesCmdConfigFromViper()
 			if err != nil {
@@ -49,7 +50,7 @@ func newDownloadImagesCmd(fs afero.Fs) (*cobra.Command, error) {
 		Flag: &option.Flag{
 			IsDirName: true,
 			Name:      "dir",
-			Usage:     "downloaded images destination directory path",
+			Usage:     "Downloaded images destination directory path",
 		},
 		Value: "images",
 	}
@@ -60,7 +61,7 @@ func newDownloadImagesCmd(fs afero.Fs) (*cobra.Command, error) {
 	intervalFlag := &option.IntFlag{
 		Flag: &option.Flag{
 			Name:  "interval",
-			Usage: "interval between download images",
+			Usage: "Interval between download images",
 		},
 		Value: 10,
 	}
