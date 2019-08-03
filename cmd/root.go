@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path"
 
 	"github.com/mpppk/twitter/internal/option"
 	"github.com/spf13/afero"
@@ -24,7 +25,7 @@ func NewRootCmd(fs afero.Fs) (*cobra.Command, error) {
 		Flag: &option.Flag{
 			Name:         "config",
 			IsPersistent: true,
-			Usage:        "config file (default is $HOME/.twitter.yaml)",
+			Usage:        "config file (default is $HOME/.config/.twitter.yaml)",
 		},
 	}
 
@@ -89,7 +90,7 @@ func initConfig() {
 		}
 
 		// Search config in home directory with name ".twitter" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(path.Join(home, ".config"))
 		viper.SetConfigName(".twitter")
 	}
 
