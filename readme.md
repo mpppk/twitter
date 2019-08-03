@@ -13,10 +13,10 @@ Or `go get github.com/mpppk/twitter` (go modules must be enabled)
 
 ### Search
 Search tweets by query and some options.  
-Results are stored in local file DB. (You can specify the DB path by --db-path flag.)  
+Results are stored in local file DB. (You must specify the DB path by --db-path flag.)  
 If you want to download images which contained in tweets, execute 'download images' command after search command.
 
-Search command manage two state, 'minID' and 'maxID', which decide tweet ID range when searching. So search command can resume even if process is interrupted.
+Search command manage two state, 'minID' and 'maxID', which decide tweet ID range of searching. So search command can resume even if process is interrupted.
 
 ```bash
 $ twitter search \
@@ -45,10 +45,10 @@ Each DB file has two state, 'minID' and 'maxID', which decide tweet ID range whe
 These values are updated automatically by search command, but you can also update manually through 'config' command.
 
 ```bash
-$ twitter config set [maxID|minID] [new tweet ID]
+$ twitter config set --db-path tweets.db [maxID|minID] [new tweet ID]
 ```
 
 ```bash
-$ twitter config get [maxID|minID]
-=> maxID / minID will be printed
+$ twitter config get --db-path tweets.db [maxID|minID]
+=> 1157483911351377920 
 ```
