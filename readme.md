@@ -15,7 +15,8 @@ Or `go get github.com/mpppk/twitter` (go modules must be enabled)
 Search tweets by query and some options.  
 Results are stored in local file DB. (You can specify the DB path by --db-path flag.)  
 If you want to download images which contained in tweets, execute 'download images' command after search command.
-  
+
+Search command manage two state, 'minID' and 'maxID', which decide tweet ID range when searching. So search command can resume even if process is interrupted.
 
 ```bash
 $ twitter search \
@@ -23,6 +24,12 @@ $ twitter search \
   -query [some_words] \
   --exclude retweets \
   --filter images 
+  
+  100 tweets are saved. (1157495237557678080-1157489067203760128)
+  maxID is updated => 1157489067203760127
+  100 tweets are saved. (1157489006810206210-1157483911351377921)
+  maxID is updated => 1157483911351377920
+  ...
 ```
 
 ### Download images

@@ -40,10 +40,10 @@ If you want to download images which contained in tweets, execute 'download imag
 
 			maxId, err := repo.GetMaxID()
 			if err != nil {
-				cmd.Println("saved max ID does not found")
+				cmd.Println("saved maxID does not found")
 				maxId = -1
 			} else {
-				cmd.Println("retrieved max ID: ", maxId)
+				cmd.Println("Retrieved maxID: ", maxId)
 			}
 
 			query := twitter.BuildQuery(conf.Query, conf.Excludes, conf.Filters)
@@ -72,9 +72,9 @@ If you want to download images which contained in tweets, execute 'download imag
 				if err := repo.SetMaxId(lastTweet.Id - 1); err != nil {
 					return err
 				}
-
 				maxId = lastTweet.Id - 1
-				cmd.Printf("new max id: %d\n", maxId)
+				cmd.Printf("%d tweets are saved. (%d-%d)\n", len(tweets), tweets[0].Id, lastTweet.Id)
+				cmd.Printf("maxID is updated => %d\n", maxId)
 			}
 
 			// 最新のtweet取得部分を実装
@@ -103,8 +103,11 @@ If you want to download images which contained in tweets, execute 'download imag
 						return err
 					}
 
+					lastTweet := tweets[len(tweets)-1]
+
 					minId = firstTweet.Id
-					cmd.Printf("new min id: %d\n", minId)
+					cmd.Printf("%d tweets are saved. (%d-%d)\n", len(tweets), firstTweet.Id, lastTweet.Id)
+					cmd.Printf("minID is updated => %d\n", minId)
 				}
 			}
 			return nil
