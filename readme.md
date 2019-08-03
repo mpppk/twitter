@@ -27,7 +27,7 @@ Search tweets by query and some options.
 Results are stored in local file DB. (You must specify the DB path by --db-path flag.)  
 If you want to download images which contained in tweets, execute 'download images' command after search command.
 
-Search command manage two state, 'minID' and 'maxID', which decide tweet ID range of searching. So search command can resume even if process is interrupted.
+Search command manages two states, 'minID' and 'maxID', which decide tweet ID range of searching. So search command can resume even if the process is interrupted.
 
 ```bash
 $ twitter search \
@@ -45,14 +45,14 @@ $ twitter search \
 
 ### Download images
 Download images which contained tweets from DB file.  
-You must execute 'search' command first for collect tweets to DB.
+You must execute 'search' command first for collecting tweets to DB.
 
 ```bash
 $ twitter download images -db-path tweets.db
 ```
 
 ### Configuration
-Each DB file has two state, 'minID' and 'maxID', which decide tweet ID range when searching.  
+Each DB file has two states, 'minID' and 'maxID', which decide the tweet ID range when searching.  
 These values are updated automatically by search command, but you can also update manually through 'config' command.
 
 ```bash
