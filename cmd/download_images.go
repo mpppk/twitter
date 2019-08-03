@@ -18,7 +18,7 @@ func newDownloadImagesCmd(fs afero.Fs) (*cobra.Command, error) {
 		Use:   "images",
 		Short: "Download images which contained tweets from DB file",
 		Long: `Download images which contained tweets from DB file.
-You must execute 'search' command first for collect tweets to DB.`,
+You must execute 'search' command first for collecting tweets to DB.`,
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			conf, err := option.NewImagesCmdConfigFromViper()
 			if err != nil {

@@ -18,7 +18,7 @@ var cfgFile string
 func NewRootCmd(fs afero.Fs) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "twitter",
-		Short: "CLI for collect tweets",
+		Short: "CLI for collecting tweets",
 	}
 
 	configFlag := &option.StringFlag{

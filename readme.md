@@ -1,4 +1,4 @@
-# Twitter CLI for collect tweets
+# Twitter CLI for collecting tweets
 [![CircleCI](https://circleci.com/gh/mpppk/twitter.svg?style=svg)](https://circleci.com/gh/mpppk/twitter)
 [![Build status](https://ci.appveyor.com/api/projects/status/39y6e4o6khig6mct?svg=true)](https://ci.appveyor.com/project/mpppk/twitter)
 [![codecov](https://codecov.io/gh/mpppk/twitter/branch/master/graph/badge.svg)](https://codecov.io/gh/mpppk/twitter)
