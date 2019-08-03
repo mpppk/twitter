@@ -9,6 +9,17 @@
 Download from [GitHub Releases](https://github.com/mpppk/twitter/releases).  
 Or `go get github.com/mpppk/twitter` (go modules must be enabled)
 
+## Setup
+Put below `.twitter.yml` to `~/.config`.
+
+
+```yaml
+ConsumerKey: xxxx
+ConsumerSecret: xxxx
+AccessToken: xxxx
+AccessTokenSecret: xxxx
+```
+
 ## Usage
 
 ### Search

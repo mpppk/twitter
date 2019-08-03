@@ -18,6 +18,19 @@ func (s *SearchCmdConfig) validate() error {
 	if s.DBPath == "" {
 		return xerrors.Errorf("--db-path must be provided")
 	}
+
+	if s.ConsumerKey == "" {
+		return xerrors.Errorf("ConsumerKey must be provided via config file. Put .twitter.yml to ~/.config")
+	}
+	if s.ConsumerSecret == "" {
+		return xerrors.Errorf("ConsumerSecret must be provided via config file. Put .twitter.yml to ~/.config")
+	}
+	if s.AccessToken == "" {
+		return xerrors.Errorf("AccessToken must be provided via config file. Put .twitter.yml to ~/.config")
+	}
+	if s.AccessTokenSecret == "" {
+		return xerrors.Errorf("AccessTokenSecret must be provided via config file. Put .twitter.yml to ~/.config")
+	}
 	return nil
 }
 
