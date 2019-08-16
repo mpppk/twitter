@@ -7,7 +7,7 @@ import (
 	"golang.org/x/xerrors"
 )
 
-const Version = "1.2.3"
+const Version = "0.1.1"
 const slug = "mpppk/twitter"
 
 // Do execute updating binary
