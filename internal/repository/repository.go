@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mpppk/twitter/internal/io"
+	"github.com/mpppk/twitter/pkg/io"
 
 	"github.com/ChimeraCoder/anaconda"
 	bolt "github.com/mpppk/bbolt"
