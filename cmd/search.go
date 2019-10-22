@@ -78,38 +78,47 @@ If you want to download images which contained in tweets, execute 'download imag
 			}
 
 			// 最新のtweet取得部分を実装
-			if minId, err := repo.GetMinID(); err == nil {
-				for {
-					tweets, err := client.SearchTweets(query, -1, minId)
-					if err != nil {
-						cmd.Println("failed to search:", err)
-						cmd.Printf("sleep %d sec...\n", conf.Interval)
-						time.Sleep(time.Duration(conf.Interval) * time.Second)
-						continue
-					}
+			minId, err := repo.GetMinID()
+			if err != nil {
+				return nil
+			}
 
-					if len(tweets) == 0 {
-						break
-					}
+			oldestTweetId := int64(-1)
+			latestTweetId := int64(-1)
+			for {
+				tweets, err := client.SearchTweets(query, oldestTweetId, minId)
+				if err != nil {
+					cmd.Println("failed to search:", err)
+					cmd.Printf("sleep %d sec...\n", conf.Interval)
+					time.Sleep(time.Duration(conf.Interval) * time.Second)
+					continue
+				}
 
-					for _, tweet := range tweets {
-						if err := repo.SaveTweet(&tweet); err != nil {
-							return err
-						}
-					}
+				if len(tweets) == 0 {
+					break
+				}
 
-					firstTweet := tweets[0]
-					if err := repo.SetMinId(firstTweet.Id); err != nil {
+				for _, tweet := range tweets {
+					if err := repo.SaveTweet(&tweet); err != nil {
 						return err
 					}
-
-					lastTweet := tweets[len(tweets)-1]
-
-					minId = firstTweet.Id
-					cmd.Printf("%d tweets are saved. (%d-%d)\n", len(tweets), firstTweet.Id, lastTweet.Id)
-					cmd.Printf("minID is updated => %d\n", minId)
 				}
+
+				latestTweet := tweets[0]
+				if latestTweetId < latestTweet.Id {
+					latestTweetId = latestTweet.Id
+				}
+				oldestTweet := tweets[len(tweets)-1]
+				if oldestTweetId < 0 || oldestTweetId > oldestTweet.Id {
+					oldestTweetId = oldestTweet.Id
+				}
+
+				cmd.Printf("%d tweets are saved. (%d-%d)\n", len(tweets), oldestTweet.Id, latestTweet.Id)
 			}
+			if err := repo.SetMinId(latestTweetId); err != nil {
+				return err
+			}
+			cmd.Printf("minID is updated => %d\n", minId)
 			return nil
 		},
 	}
