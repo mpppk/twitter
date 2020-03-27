@@ -14,7 +14,7 @@ require (
 	github.com/mpppk/bbolt v1.3.3
 	github.com/rhysd/go-github-selfupdate v1.2.1
 	github.com/spf13/afero v1.2.2
-	github.com/spf13/cobra v0.0.6
+	github.com/spf13/cobra v0.0.7
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.6.2
 	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543
