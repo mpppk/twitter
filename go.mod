@@ -12,7 +12,7 @@ require (
 	github.com/garyburd/go-oauth v0.0.0-20180319155456-bca2e7f09a17 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mpppk/bbolt v1.3.3
-	github.com/rhysd/go-github-selfupdate v1.2.1
+	github.com/rhysd/go-github-selfupdate v1.2.2
 	github.com/spf13/afero v1.2.2
 	github.com/spf13/cobra v0.0.7
 	github.com/spf13/pflag v1.0.5
