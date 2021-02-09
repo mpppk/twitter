@@ -46,7 +46,7 @@ If you want to download images which contained in tweets, execute 'download imag
 				cmd.Println("Retrieved maxID: ", maxId)
 			}
 
-			query := twitter.BuildQuery(conf.Query, conf.Excludes, conf.Filters)
+			query := twitter.BuildQuery(conf.Query, conf.IgnoreKeywords, conf.Excludes, conf.Filters)
 			cmd.Printf("Search query: %q\n", query)
 
 			for {
@@ -130,6 +130,18 @@ If you want to download images which contained in tweets, execute 'download imag
 		},
 	}
 	if err := option.RegisterStringFlag(cmd, queryFlag); err != nil {
+		return nil, err
+	}
+
+	ignoreFlag := &option.StringFlag{
+		Flag: &option.Flag{
+			IsRequired: false,
+			Name:       "ignore",
+			Usage:      "ignore keywords",
+		},
+		Value: "",
+	}
+	if err := option.RegisterStringFlag(cmd, ignoreFlag); err != nil {
 		return nil, err
 	}
 

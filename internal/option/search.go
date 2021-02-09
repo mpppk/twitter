@@ -9,9 +9,10 @@ import (
 // SearchCmdConfig is config for search command
 type SearchCmdConfig struct {
 	*SearchRawCmdConfig
-	Excludes []string
-	Filters  []string
-	DBPath   string
+	IgnoreKeywords []string
+	Excludes       []string
+	Filters        []string
+	DBPath         string
 }
 
 func (s *SearchCmdConfig) validate() error {
@@ -37,6 +38,7 @@ func (s *SearchCmdConfig) validate() error {
 // SearchCmdConfig is raw config for search command
 type SearchRawCmdConfig struct {
 	Query             string
+	Ignore            string
 	Exclude           string
 	Interval          int
 	Filter            string
@@ -62,6 +64,7 @@ func newSearchCmdConfigFromRawConfig(rawConfig *CmdRawConfig) *SearchCmdConfig {
 	}
 	searchCmdConfig.DBPath = rawConfig.DBPath
 
+	searchCmdConfig.IgnoreKeywords = strings.Split(searchCmdConfig.Ignore, ",")
 	searchCmdConfig.Excludes = strings.Split(searchCmdConfig.Exclude, ",")
 	searchCmdConfig.Filters = strings.Split(searchCmdConfig.Filter, ",")
 
