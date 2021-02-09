@@ -2,11 +2,10 @@ package twitter
 
 import "strings"
 
-func BuildQuery(query string, excludes []string, filters []string) string {
-	queries := []string{
-		query,
-		"OR",
-		"#" + query,
+func BuildQuery(query string, ignoreKeywords []string, excludes []string, filters []string) string {
+	queries := []string{query}
+	for _, keyword := range ignoreKeywords {
+		queries = append(queries, "-"+keyword)
 	}
 	for _, exclude := range excludes {
 		queries = append(queries, "exclude:"+exclude)
