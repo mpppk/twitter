@@ -16,6 +16,6 @@ require (
 	github.com/spf13/afero v1.8.2
 	github.com/spf13/cobra v0.0.7
 	github.com/spf13/pflag v1.0.5
-	github.com/spf13/viper v1.10.1
+	github.com/spf13/viper v1.11.0
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f
 )
